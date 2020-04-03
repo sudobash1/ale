@@ -345,7 +345,8 @@ Execute(CFlags we want to pass):
   \ . ' -isysroot sysroot --sysroot=test --no-sysroot-suffix -imultilib multidir'
   \ . ' -Wsome-warning -std=c89 -pedantic -pedantic-errors -ansi'
   \ . ' -foption -O2 -C -CC -trigraphs -nostdinc -nostdinc++'
-  \ . ' -iplugindir=dir -march=native -w',
+  \ . ' -iplugindir=dir -march=native -w'
+  \ . ' @' . ale#Escape(ale#path#Simplify(g:dir. '/test_c_projects/makefile_project/flags')),
   \ ale#c#ParseCFlags(
   \   ale#path#Simplify(g:dir. '/test_c_projects/makefile_project'),
   \   'gcc'
@@ -355,7 +356,7 @@ Execute(CFlags we want to pass):
   \ . ' -isysroot sysroot --sysroot=test --no-sysroot-suffix -imultilib multidir'
   \ . ' -Wsome-warning -std=c89 -pedantic -pedantic-errors -ansi'
   \ . ' -foption -O2 -C -CC -trigraphs -nostdinc -nostdinc++'
-  \ . ' -iplugindir=dir -march=native -w'
+  \ . ' -iplugindir=dir -march=native -w @flags'
   \ )
 
 Execute(CFlags we dont want to pass):

@@ -83,9 +83,15 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
         \ || stridx(l:option, '-iquote') == 0
         \ || stridx(l:option, '-isystem') == 0
         \ || stridx(l:option, '-idirafter') == 0
+        \ || stridx(l:option, '@') == 0
+            let l:two_args = v:true
             if stridx(l:option, '-I') == 0 && l:option isnot# '-I'
                 let l:arg = join(split(l:option, '\zs')[2:], '')
                 let l:option = '-I'
+            elseif stridx(l:option, '@') == 0
+                let l:arg = join(split(l:option, '\zs')[1:], '')
+                let l:option = '@'
+                let l:two_args = v:false
             else
                 let l:arg = l:split_lines[l:option_index]
                 let l:option_index = l:option_index + 1
@@ -98,8 +104,12 @@ function! ale#c#ParseCFlags(path_prefix, cflag_line) abort
                 let l:arg = ale#Escape(a:path_prefix . s:sep . l:rel_path)
             endif
 
-            call add(l:cflags_list, l:option)
-            call add(l:cflags_list, l:arg)
+            if l:two_args
+                call add(l:cflags_list, l:option)
+                call add(l:cflags_list, l:arg)
+            else
+                call add(l:cflags_list, l:option . l:arg)
+            endif
         " Options with arg that can be grouped with the option or separate
         elseif stridx(l:option, '-D') == 0 || stridx(l:option, '-B') == 0
             call add(l:cflags_list, l:option)
